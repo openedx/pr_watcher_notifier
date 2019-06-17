@@ -1,0 +1,12 @@
+Hi,
+
+Pull request #{{ number }} ({{ pr_url }}) against the {{ repo }} repository has been {{ action }}.
+
+This contains files matching {{ patterns }}.
+
+{% for modified_file in modified_files %}
+  * {{ modified_file }}
+{% endfor %}
+
+--
+PR Watcher Notifier
