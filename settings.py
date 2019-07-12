@@ -32,7 +32,7 @@ GITHUB_ACCESS_TOKEN = os.environ['GITHUB_ACCESS_TOKEN']
 
 WATCH_CONFIG = get_watch_config()
 
-MAIL_DEFAULT_SENDER = os.environ('MAIL_DEFAULT_SENDER')
+MAIL_DEFAULT_SENDER = os.environ['MAIL_DEFAULT_SENDER']
 
 if os.environ.get('MAIL_SERVER'):
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
