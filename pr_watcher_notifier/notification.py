@@ -13,7 +13,7 @@ def send_email(context):
     Send the notification email.
     """
     subject = context['subject'].format(**context)
-    body = render_template('email_body.txt', **context)
+    body = render_template(context['body'], **context)
     msg = Message(
         subject,
         recipients=context['to'],
@@ -38,6 +38,7 @@ def send_notifications(data):
         'creator': pr_data['user']['login'],
         'to': watch_config['recipients'],
         'subject': watch_config['subject'],
+        'body': watch_config['body'] if 'body' in watch_config else 'email_body.txt',
         'pr_url': pr_data['_links']['html']['href'],
         'modified_files': data['modified_files'],
     }
