@@ -50,11 +50,17 @@ def should_send_notification(data):
         repo = data['repository']['full_name']
         is_private = data['repository']['private']
         pr_number = data['number']
-        pr = get_pr(repo, pr_number)
+        try:
+            pr = get_pr(repo, pr_number)
+        except Exception:
+            return notify, matching_modified_files
         matched = False
-        watch_config = current_app.config['WATCH_CONFIG']
-        config, wildcard_match = get_repo_watch_config(watch_config, repo)
+        config = data['watch_config']
+        wildcard_match = data['wildcard_match']
         if is_private and wildcard_match and not config.get('notify_for_private_repos', False):
+            current_app.logger.info(
+                '{} is a private repo for which notifications have not been explicitly enabled'.format(repo)
+            )
             return False, []
         if config:
             for modified_file in pr.get_files():
@@ -98,6 +104,7 @@ def handler():
             abort(400)
         data = get_request_json(request)
         repo = data['repository']['full_name']
+        data['watch_config'], data['wildcard_match'] = get_repo_watch_config(current_app.config['WATCH_CONFIG'], repo)
         pr_number = data['number']
         notify, modified_files = should_send_notification(data)
         if notify:

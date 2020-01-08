@@ -2,7 +2,7 @@
 Utility functions for sending notifications.
 """
 
-from flask import current_app, render_template
+from flask import render_template
 from flask_mail import Message
 
 from . import mail
@@ -28,7 +28,7 @@ def send_notifications(data):
     """
     pr_data = data['pull_request']
     repo = data['repository']['full_name']
-    watch_config = current_app.config['WATCH_CONFIG'][repo]
+    watch_config = data['watch_config']
     context = {
         'repo': repo,
         'number': data['number'],

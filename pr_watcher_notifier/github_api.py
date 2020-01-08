@@ -49,7 +49,12 @@ def get_comparison_file_names(repo, base, head):
     """
     Return the file names of the file names modified in the given comparison.
     """
-    return get_file_names(get_client().get_repo(repo).compare(base, head).files)
+    files = []
+    try:
+        files = get_client().get_repo(repo).compare(base, head).files
+    except Exception:
+        current_app.logger.error('Failed to retrieve the files changed in the most recent update to the PR')
+    return get_file_names(files)
 
 
 def get_target_branch(pr):

@@ -98,6 +98,26 @@ def test_pr_action_ignored(post, mocker):
     mocked_send_notifications.assert_not_called()
 
 
+def test_notification_not_sent_when_unable_to_retrieve_pr_details(post, mocker):
+    """
+    Test when unable to retrieve the PR details, for example due to not having access to the private repository
+    of the PR or when there are issues with the GitHub API.
+    """
+    mocker.patch(
+        'pr_watcher_notifier.views.get_pr',
+        side_effect=Exception()
+    )
+    response = post(json={
+        'repository': {
+            'full_name': 'a/b',
+            'private': False,
+        },
+        'number': 1,
+        'action': 'opened',
+    })
+    assert response.status_code == 200
+
+
 def test_no_files_matching_condition(post, mocker):
     """
     Test if no files in the opened PR match the watch pattern.
