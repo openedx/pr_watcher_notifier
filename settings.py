@@ -5,6 +5,7 @@ import os
 
 import yaml
 
+
 def get_watch_config():
     """
     Load the watch configuration from the YAML file specified in
@@ -17,18 +18,6 @@ def get_watch_config():
 
 GITHUB_WEBHOOK_SECRET = os.environ['GITHUB_WEBHOOK_SECRET']
 GITHUB_ACCESS_TOKEN = os.environ['GITHUB_ACCESS_TOKEN']
-
-# Expected format of values in the YAML configuration file.
-# Repeat the same block for configuring multiple repositories.
-#
-# ---
-# <repo owner>/<repo name>:
-#   patterns:
-#     - "pattern1"
-#     - "pattern2"
-#   recipients:
-#     - "nobody@example.com"
-#   subject: "Subject text, see code for available format strings"
 
 WATCH_CONFIG = get_watch_config()
 

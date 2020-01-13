@@ -2,7 +2,7 @@
 Utility functions for sending notifications.
 """
 
-from flask import current_app, render_template
+from flask import render_template
 from flask_mail import Message
 
 from . import mail
@@ -13,7 +13,7 @@ def send_email(context):
     Send the notification email.
     """
     subject = context['subject'].format(**context)
-    body = render_template('email_body.txt', **context)
+    body = render_template(context['body'], **context)
     msg = Message(
         subject,
         recipients=context['to'],
@@ -28,7 +28,7 @@ def send_notifications(data):
     """
     pr_data = data['pull_request']
     repo = data['repository']['full_name']
-    watch_config = current_app.config['WATCH_CONFIG'][repo]
+    watch_config = data['watch_config']
     context = {
         'repo': repo,
         'number': data['number'],
@@ -38,6 +38,7 @@ def send_notifications(data):
         'creator': pr_data['user']['login'],
         'to': watch_config['recipients'],
         'subject': watch_config['subject'],
+        'body': watch_config['body'] if 'body' in watch_config else 'email_body.txt',
         'pr_url': pr_data['_links']['html']['href'],
         'modified_files': data['modified_files'],
     }

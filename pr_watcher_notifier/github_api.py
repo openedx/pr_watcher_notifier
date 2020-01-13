@@ -3,7 +3,6 @@ Utility functions for interacting with the GitHub API.
 """
 import hashlib
 import hmac
-from fnmatch import fnmatch
 
 from flask import current_app
 from github import Github
@@ -50,7 +49,12 @@ def get_comparison_file_names(repo, base, head):
     """
     Return the file names of the file names modified in the given comparison.
     """
-    return get_file_names(get_client().get_repo(repo).compare(base, head).files)
+    files = []
+    try:
+        files = get_client().get_repo(repo).compare(base, head).files
+    except Exception:
+        current_app.logger.error('Failed to retrieve the files changed in the most recent update to the PR')
+    return get_file_names(files)
 
 
 def get_target_branch(pr):
@@ -58,44 +62,3 @@ def get_target_branch(pr):
     Return the target branch name of a pull request.
     """
     return pr.base.ref
-
-
-def should_send_notification(data):
-    """
-    Return whether the notification should be sent for the given request data or not.
-    """
-    action = data['action']
-    notify = False
-    matching_modified_files = []
-
-    if action in ('opened', 'closed', 'synchronize', 'reopened'):
-        repo = data['repository']['full_name']
-        pr_number = data['number']
-        pr = get_pr(repo, pr_number)
-        matched = False
-        watch_config = current_app.config['WATCH_CONFIG']
-        for modified_file in pr.get_files():
-            config = watch_config.get(repo)
-            if config:
-                for pattern in config['patterns']:
-                    if fnmatch(modified_file.filename, pattern):
-                        matched = True
-                        matching_modified_files.append(modified_file.filename)
-                if matched:
-                    break
-        if matched:
-            notify = True
-
-            # To avoid duplicate notifications for the same PR when its source branch is updated,
-            # check if the modifications to the watched patterns are first added by the changes
-            # in the update. This can be done by comparing the previous HEAD of the PR branch against
-            # the target branch and verifying that no files matching the patterns were modified.
-            if action == 'synchronize':
-                target = get_target_branch(pr)
-                previous_head = data['before']
-                for modified_file in get_comparison_file_names(repo, target, previous_head):
-                    for pattern in watch_config[repo]['patterns']:
-                        if fnmatch(modified_file, pattern):
-                            notify = False
-                            break
-    return notify, matching_modified_files
