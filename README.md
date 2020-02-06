@@ -59,3 +59,12 @@ command respectively.
 ```bash
 $ flask run -h 0.0.0.0 -p 8000
 ```
+
+Deploying to Heroku
+===================
+
+An example `Procfile` which deploys this app to Heroku using gunicorn is provided. In addition to the `web` process that runs the app,
+it also defines a `release` process that runs the `do_pre_release_steps.sh` script. The script downloads the watch configuration
+file named `config.yml` from an external git repository specified in the `CUSTOM_CONFIG_REPO` environment variable to the location
+specified in the `WATCH_CONFIG_FILE` environment variable. If the repository also contains a `templates` sub-directory containing
+the custom email templates, those are copied to the app templates directory and can be used in the watch configuration file.
