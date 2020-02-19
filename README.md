@@ -42,7 +42,8 @@ $ pytest --cov=pr_watcher_notifier
 ```
 
 * Configure the environment variables used in the `settings.py` file.
-* Setup the watch configuration YAML file and configure the `WATCH_CONFIG_FILE` environment variable to point to it. The file format is documented in `watch_config.yml.sample`.
+* Setup the watch configuration YAML file and configure the `WATCH_CONFIG_FILE` environment variable to point to it. The
+  file format is documented in `watch_config.yml.sample`.
 * Set the `FLASK_APP` environment variable to point to the `run.py` file.
 * Set the `FLASK_DEBUG` environment variable to `1` and run the development server.
 
@@ -60,11 +61,37 @@ command respectively.
 $ flask run -h 0.0.0.0 -p 8000
 ```
 
+Configuration
+=============
+
+The app gets its configuration settings from the following environment variables.
+
+* `GITHUB_ACCESS_TOKEN` - The GitHub access token which has the appropriate permissions to access the repositories
+  the app will be configured to watch.
+* `GITHUB_WEBHOOK_TOKEN` - The webhook secret token used to create the GitHub webhook.
+
+* `WATCH_CONFIG_FILE` - The file containing the watch configuration to be used by the app.
+* `CUSTOM_CONFIG_REPO` - Optional. Required only when deploying to Heroku. URL of a git repository containing
+  the watch configuration file. More details in the section about deploying to Heroku.
+
+The following settings related to email accept values as documented in
+the [Flask-Mail documentation](https://pythonhosted.org/Flask-Mail/#configuring-flask-mail).
+
+* `MAIL_DEFAULT_SENDER`
+* `MAIL_SERVER`
+* `MAIL_PORT`
+* `MAIL_USE_TLS`
+* `MAIL_USERNAME`
+* `MAIL_PASSWORD`
+
 Deploying to Heroku
 ===================
 
-An example `Procfile` which deploys this app to Heroku using gunicorn is provided. In addition to the `web` process that runs the app,
-it also defines a `release` process that runs the `do_pre_release_steps.sh` script. The script downloads the watch configuration
-file named `config.yml` from an external git repository specified in the `CUSTOM_CONFIG_REPO` environment variable to the location
-specified in the `WATCH_CONFIG_FILE` environment variable. If the repository also contains a `templates` sub-directory containing
-the custom email templates, those are copied to the app templates directory and can be used in the watch configuration file.
+An example `Procfile` which deploys this app to Heroku using `gunicorn` is provided. Since Heroku doesn't provide an easy
+way to deploy custom configuration files, the `do_pre_release_steps.sh` script is run before starting the app.
+The script downloads the watch configuration file named `config.yml` from an external git repository specified in
+the `CUSTOM_CONFIG_REPO` environment variable to the location specified in the `WATCH_CONFIG_FILE` environment variable.
+If the repository also contains a `templates` sub-directory containing the custom email templates, those are copied to
+the app templates directory and can be used in the watch configuration file.
+
+[Here](https://github.com/lgp171188/custom_templates) is an example repo that can be used as the `CUSTOM_CONFIG_REPO`.
