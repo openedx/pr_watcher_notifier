@@ -1,25 +1,37 @@
 ---
-a/b:
+<user or organization>/repository:
   patterns: # Patterns can be specified using unix shell-style wildcards as documented at https://docs.python.org/3/library/fnmatch.html
     - documents/*
   recipients:
     - nobody@example.com
   subject: "PR Watcher notifier: watched change in {repo}"
-b/*:  # Wildcards like this, ending with /* can be used watch all repositories under a GitHub organization
+
+organization/*:  # Wildcards like this, ending with /* can be used watch all repositories under a GitHub organization
   patterns:
     - docs/*
     - tests/*
     - common/lib/mylibrary/__init__.py
   recipients:
     - nobody@example.com
-  subject: "PR Watcher notifier: watched change in {repo} under 'b' organization"
-  body: /path/to/body/template/file/under/the/pr_watcher_notifier/templates/dir  # Optional. Path to the jinja2 template file to use for rendering the email body. Defaults to the provided 'pr_watcher_notifier/templates/email_body.txt' template.
-c/*:
+  subject: "PR Watcher notifier: watched change in {repo} under 'organization' organization"
+  # Optional. Path to the jinja2 template file to use for rendering the email body. Defaults to the provided
+  # 'pr_watcher_notifier/templates/email_body.txt' template.
+  body: /path/to/body/template/file/under/the/pr_watcher_notifier/templates/dir
+
+organization/*:
   patterns:
     - documents/*
   recipients:
     - nobody@example.com
-  subject: "PR Watcher notifier: watched change in {repo} under 'c' organization"
+  subject: "PR Watcher notifier: watched change in {repo} under 'organization' organization"
+
   # This is only used for wildcard repository patterns corresponding to GitHub organizations
-  # and defaults to False
+  # and defaults to False Doesn't work for explicitly configured private repositories.
   notify_for_private_repos: True
+
+<user or organization>/private-repository: # Notifications are always sent for explicitly configured repos, private or not.
+  patterns:
+    - *.rst
+  recipient:
+    - somebody@example.com
+  subject: "PR Watcher notifier: watched change in {repo}
