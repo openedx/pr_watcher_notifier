@@ -3,6 +3,7 @@ A web application to receive GitHub webhook payload for pull requests and send o
 when the watched files are changed.
 """
 import logging
+import os
 
 from flask import Flask
 from flask.logging import default_handler
@@ -22,8 +23,10 @@ def create_app(config_obj='settings'):
     app.logger.removeHandler(default_handler)
     console_handler = logging.StreamHandler()
     formatter = logging.Formatter('%(asctime)s | %(levelname)s | process=%(process)d | %(name)s | %(message)s')
-    console_handler.setLevel(logging.INFO)
+    log_level = os.environ.get('LOGLEVEL', 'INFO').upper()
+    console_handler.setLevel(log_level)
     console_handler.setFormatter(formatter)
     app.logger.addHandler(console_handler)
+    app.logger.setLevel(log_level)
     mail.init_app(app)
     return app

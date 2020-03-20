@@ -68,11 +68,15 @@ The app gets its configuration settings from the following environment variables
 
 * `GITHUB_ACCESS_TOKEN` - The GitHub access token which has the appropriate permissions to access the repositories
   the app will be configured to watch.
-* `GITHUB_WEBHOOK_TOKEN` - The webhook secret token used to create the GitHub webhook.
+  Get this from https://github.com/settings/tokens.
+* `GITHUB_WEBHOOK_SECRET` - The webhook secret token used to create the GitHub webhook.
+  This is a random string you make up, and will use when configuring the webhook.
+  ``uuid.uuid4()`` could be a good source.
 
 * `WATCH_CONFIG_FILE` - The file containing the watch configuration to be used by the app.
 * `CUSTOM_CONFIG_REPO` - Optional. Required only when deploying to Heroku. URL of a git repository containing
-  the watch configuration file. More details in the section about deploying to Heroku.
+  the watch configuration file, which must be named config.yml. More details in the section about deploying to Heroku.
+* `LOG_LEVEL` - the log level to use: "debug", "info", "warning", or "error".
 
 The following settings related to email accept values as documented in
 the [Flask-Mail documentation](https://pythonhosted.org/Flask-Mail/#configuring-flask-mail).
@@ -95,3 +99,14 @@ If the repository also contains a `templates` sub-directory containing the custo
 the app templates directory and can be used in the watch configuration file.
 
 [Here](https://github.com/lgp171188/custom_templates) is an example repo that can be used as the `CUSTOM_CONFIG_REPO`.
+
+
+Setting the webhook
+===================
+
+To use this as a GitHub webhook, you configure either a per-repo or per-organization webhook:
+
+* For payload URL, use https://<HOST>/pull-requests .
+* For Content type, use application/json .
+* For Secret, use whatever you set for `GITHUB_WEBHOOK_SECRET` above.
+* For Events, choose Pull requests.

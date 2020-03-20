@@ -2,7 +2,7 @@
 Utility functions for sending notifications.
 """
 
-from flask import render_template
+from flask import current_app, render_template
 from flask_mail import Message
 
 from . import mail
@@ -19,6 +19,9 @@ def send_email(context):
         recipients=context['to'],
     )
     msg.body = body
+    current_app.logger.info('Sending email to {!r} with subject {!r}'.format(
+        context['to'], subject,
+        ))
     mail.send(msg)
 
 

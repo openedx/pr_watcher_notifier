@@ -65,6 +65,7 @@ def should_send_notification(data):
         if config:
             for modified_file in pr.get_files():
                 for pattern in config['patterns']:
+                    current_app.logger.debug("fnmatch({!r}, {!r})".format(modified_file.filename, pattern))
                     if fnmatch(modified_file.filename, pattern):
                         matched = True
                         matching_modified_files.append(modified_file.filename)
