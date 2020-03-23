@@ -12,6 +12,7 @@ def send_email(context):
     """
     Send the notification email.
     """
+    current_app.logger.debug('Sending email with context: {}'.format(context))
     subject = context['subject'].format(**context)
     body = render_template(context['body'], **context)
     msg = Message(
@@ -44,5 +45,6 @@ def send_notifications(data):
         'body': watch_config['body'] if 'body' in watch_config else 'email_body.txt',
         'pr_url': pr_data['_links']['html']['href'],
         'modified_files': data['modified_files'],
+        'pr': pr_data,
     }
     send_email(context)
