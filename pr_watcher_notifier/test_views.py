@@ -211,8 +211,43 @@ def test_get_repo_watch_config_when_a_matching_org_wildcard_pattern_is_present()
     repo_config, wildcard_match = get_repo_watch_config(
         {
             'a/*': {
-                'patterns': ['documents/*', ],
+                'patterns': ['documents/*'],
                 'recipients': 'nobody@example.com',
+            }
+        },
+        'a/abcd'
+    )
+    assert repo_config
+    assert wildcard_match
+
+
+def test_get_repo_watch_config_when_excluding():
+    """
+    Test the get_repo_watch_config function when excluding a pattern
+    """
+    repo_config, wildcard_match = get_repo_watch_config(
+        {
+            'a/*': {
+                'patterns': ['documents/*'],
+                'recipients': 'nobody@example.com',
+                'exclude': ['a/xyz', 'a/*bc*'],
+            }
+        },
+        'a/abcd'
+    )
+    assert not repo_config
+
+
+def test_get_repo_watch_config_when_excluding_doesnt_exclude():
+    """
+    Test the get_repo_watch_config function when excluding a pattern that doesn't match.
+    """
+    repo_config, wildcard_match = get_repo_watch_config(
+        {
+            'a/*': {
+                'patterns': ['documents/*'],
+                'recipients': 'nobody@example.com',
+                'exclude': ['a/xyz', 'a/*qq*'],
             }
         },
         'a/abcd'
@@ -228,11 +263,11 @@ def test_get_repo_watch_config_when_an_exact_match_and_a_matching_org_wildcard_p
     repo_config, wildcard_match = get_repo_watch_config(
         {
             'a/*': {
-                'patterns': ['documents/*', ],
+                'patterns': ['documents/*'],
                 'recipients': 'nobody@example.com',
             },
             'a/abcd': {
-                'patterns': ['documents/*', ],
+                'patterns': ['documents/*'],
                 'recipients': 'specific@example.com',
             }
         },
