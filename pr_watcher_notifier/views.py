@@ -31,6 +31,9 @@ def get_repo_watch_config(watch_config, repo):
     wildcard_match = False
     for watched_repo_name, config in watch_config.items():
         if fnmatch(repo, watched_repo_name):
+            excludes = config.get("exclude", ())
+            if any(fnmatch(repo, exclude) for exclude in excludes):
+                continue
             repo_config = config
             if '/*' not in watched_repo_name:
                 wildcard_match = False
