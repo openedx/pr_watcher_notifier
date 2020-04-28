@@ -92,6 +92,14 @@ def should_send_notification(data):
     return notify, matching_modified_files
 
 
+def combine_data(data, watch_config):
+    repo = data['repository']['full_name']
+    data['watch_config'], data['wildcard_match'] = get_repo_watch_config(watch_config, repo)
+    notify, modified_files = should_send_notification(data)
+    data['notify'] = notify
+    data['modified_files'] = modified_files
+
+
 @APP.route('/pull-requests', methods=['POST', ])
 def handler():
     """
@@ -107,12 +115,10 @@ def handler():
             current_app.logger.error('Invalid request signature')
             abort(400)
         data = get_request_json(request)
+        combine_data(data, current_app.config['WATCH_CONFIG'])
         repo = data['repository']['full_name']
-        data['watch_config'], data['wildcard_match'] = get_repo_watch_config(current_app.config['WATCH_CONFIG'], repo)
         pr_number = data['number']
-        notify, modified_files = should_send_notification(data)
-        if notify:
-            data['modified_files'] = modified_files
+        if data['notify']:
             current_app.logger.info('Match: {} #{}'.format(repo, pr_number))
             send_notifications(data)
             status_code = 201
