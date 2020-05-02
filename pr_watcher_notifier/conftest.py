@@ -2,11 +2,23 @@
 Fixtures for the tests.
 """
 
+from unittest.mock import MagicMock
+
 import pytest
 
 from pr_watcher_notifier import create_app
 
 URL = '/pull-requests'
+
+
+def get_dummy_pr_with_list_of_files(count):
+    """
+    Return a dummy list of files in a PR.
+    """
+    dummy_pr_object = MagicMock()
+    dummy_list_of_files = MagicMock(return_value=[MagicMock() for _ in range(count)])
+    dummy_pr_object.get_files = dummy_list_of_files
+    return dummy_pr_object
 
 
 @pytest.fixture
