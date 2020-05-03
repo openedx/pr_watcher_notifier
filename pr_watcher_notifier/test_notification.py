@@ -25,7 +25,7 @@ def test_email_rendering(app, client, mocker):
         config = yaml.safe_load(fconfig)
     combine_data(data, config)
     msg = make_email(data)
-    assert msg.subject == "Change in edx/open-edx-proposals"
+    assert msg.subject == "Change in edx/open-edx-proposals: Describe the 'maybe' key."
     assert msg.body == textwrap.dedent("""\
         A pull request has files you might be interested in.
 

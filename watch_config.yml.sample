@@ -4,7 +4,7 @@
     - documents/*
   recipients:
     - nobody@example.com
-  subject: "PR Watcher notifier: watched change in {repo}"
+  subject: "PR Watcher notifier: watched change in {{repo}}"
 
 organization/*:  # Wildcards like this, ending with /* can be used watch all repositories under a GitHub organization
   patterns:
@@ -13,7 +13,7 @@ organization/*:  # Wildcards like this, ending with /* can be used watch all rep
     - common/lib/mylibrary/__init__.py
   recipients:
     - nobody@example.com
-  subject: "PR Watcher notifier: watched change in {repo} under 'organization' organization"
+  subject: "PR Watcher notifier: watched change in {{repo}} under 'organization' organization"
   # Optional. Path to the jinja2 template file to use for rendering the email body. Defaults to the provided
   # 'pr_watcher_notifier/templates/email_body.txt' template.
   body: /path/to/body/template/file/under/the/pr_watcher_notifier/templates/dir
@@ -26,7 +26,7 @@ organization/*:
     - documents/*
   recipients:
     - nobody@example.com
-  subject: "PR Watcher notifier: watched change in {repo} under 'organization' organization"
+  subject: "PR Watcher notifier: watched change in {{repo}} under 'organization' organization"
 
   # This is only used for wildcard repository patterns corresponding to GitHub organizations
   # and defaults to False Doesn't work for explicitly configured private repositories.
@@ -37,4 +37,4 @@ organization/*:
     - *.rst
   recipient:
     - somebody@example.com
-  subject: "PR Watcher notifier: watched change in {repo}
+  subject: "PR Watcher notifier: watched change in {{repo}}
