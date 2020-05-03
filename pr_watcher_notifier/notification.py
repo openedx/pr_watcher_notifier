@@ -2,7 +2,7 @@
 Utility functions for sending notifications.
 """
 
-from flask import current_app, render_template
+from flask import current_app, render_template, render_template_string
 from flask_mail import Message
 
 from . import mail
@@ -14,7 +14,12 @@ def make_email(data):
     """
     context = make_notification_context(data)
     current_app.logger.debug('Sending email with context: {}'.format(context))
-    subject = context['subject'].format(**context)
+    # Jinja assumes HTML output, but subjects are plain text, so disable
+    # the html autoescaping.
+    subject = render_template_string(
+        "{{% autoescape false %}}{}{{% endautoescape %}}".format(context['subject']),
+        **context
+    )
     body = render_template(context['body'], **context)
     msg = Message(
         subject,

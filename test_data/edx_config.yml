@@ -10,5 +10,5 @@
   recipients:
     # The Google Group for people who want email.
     - "adr-notifications@googlegroups.com"
-  subject: "Change in {repo}"
+  subject: "Change in {{repo}}: {{ pr.title }}"
   body: test-template.txt

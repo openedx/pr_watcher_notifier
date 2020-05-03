@@ -32,13 +32,13 @@ Development Setup
 ```bash
 $ python3 -m venv venv
 $ source venv/bin/activate
-$ pip install -r requirements.txt -r requirements-dev.txt
+$ make requirements
 ```
 
 * Verify that the unit tests run without errors and pass.
 
 ```bash
-$ pytest --cov=pr_watcher_notifier
+$ make test
 ```
 
 * Configure the environment variables used in the `settings.py` file.
@@ -110,3 +110,17 @@ To use this as a GitHub webhook, you configure either a per-repo or per-organiza
 * For Content type, use application/json .
 * For Secret, use whatever you set for `GITHUB_WEBHOOK_SECRET` above.
 * For Events, choose Pull requests.
+
+
+Changelog
+=========
+
+2020-05-03
+----------
+
+The format of the "subject" key changed from a str.format() format string to a Jinja template to match the format for the "body" template, and to give access to more information.
+
+2020-04-06
+----------
+
+First version in production
