@@ -49,7 +49,7 @@ def should_send_notification(data):
     action = data['action']
     notify = False
     matching_modified_files = []
-    if action in ('opened', 'closed', 'synchronize', 'reopened'):
+    if action in ('opened', 'closed', 'synchronize', 'reopened'):  # pylint:disable=too-many-nested-blocks
         repo = data['repository']['full_name']
         is_private = data['repository']['private']
         pr_number = data['number']

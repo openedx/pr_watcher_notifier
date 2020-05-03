@@ -26,6 +26,9 @@ def make_email(data):
         recipients=context['to'],
     )
     msg.body = body
+    current_app.logger.info('Sending email to {!r} with subject {!r}'.format(
+        context['to'], subject,
+    ))
     return msg
 
 
@@ -64,8 +67,5 @@ def send_notifications(data):
     """
     Send email notifications.
     """
-    mail = make_email(data)
-    current_app.logger.info('Sending email to {!r} with subject {!r}'.format(
-        context['to'], subject,
-        ))
-    mail.send(msg)
+    email = make_email(data)
+    mail.send(email)
