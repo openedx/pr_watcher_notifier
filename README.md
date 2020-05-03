@@ -32,13 +32,13 @@ Development Setup
 ```bash
 $ python3 -m venv venv
 $ source venv/bin/activate
-$ pip install -r requirements.txt -r requirements-dev.txt
+$ make requirements
 ```
 
 * Verify that the unit tests run without errors and pass.
 
 ```bash
-$ pytest --cov=pr_watcher_notifier
+$ make test
 ```
 
 * Configure the environment variables used in the `settings.py` file.
