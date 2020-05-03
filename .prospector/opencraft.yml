@@ -1,0 +1,11 @@
+# This will enable almost every single warning
+autodetect: true
+doc-warnings: false
+allow-shorthand: false
+ignore-paths: ['venv/']
+max-line-length: 120
+strictness: 'veryhigh'
+pylint:
+  disable:
+    # This is needed due to the way the app factory pattern is used. However, this can mask other occurrences.
+    - cyclic-import

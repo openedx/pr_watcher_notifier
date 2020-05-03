@@ -5,8 +5,12 @@ help: ## Display this help message
 
 .PHONY: requirements
 requirements: ## Install the Python development requirements
-	pip install -r requirements.txt -r requirements-dev.txt
+	pip install -r requirements-dev.txt -r requirements.txt
 
 .PHONY: test
 test: ## Run the Python tests
 	pytest --cov=pr_watcher_notifier
+
+.PHONY: test.quality
+test.quality:
+	prospector --profile opencraft --uses flask
