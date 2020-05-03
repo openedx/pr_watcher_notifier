@@ -8,10 +8,11 @@ from flask_mail import Message
 from . import mail
 
 
-def send_email(context):
+def make_email(data):
     """
-    Send the notification email.
+    Make the notification email.
     """
+    context = make_notification_context(data)
     current_app.logger.debug('Sending email with context: {}'.format(context))
     subject = context['subject'].format(**context)
     body = render_template(context['body'], **context)
@@ -20,15 +21,12 @@ def send_email(context):
         recipients=context['to'],
     )
     msg.body = body
-    current_app.logger.info('Sending email to {!r} with subject {!r}'.format(
-        context['to'], subject,
-        ))
-    mail.send(msg)
+    return msg
 
 
-def send_notifications(data):
+def make_notification_context(data):
     """
-    Wrapper method to send out notifications.
+    Create the rendering context with information useful for templates.
     """
     pr_data = data['pull_request']
     repo = data['repository']['full_name']
@@ -54,4 +52,15 @@ def send_notifications(data):
         'modified_files': data['modified_files'],
         'pr': pr_data,
     }
-    send_email(context)
+    return context
+
+
+def send_notifications(data):
+    """
+    Send email notifications.
+    """
+    mail = make_email(data)
+    current_app.logger.info('Sending email to {!r} with subject {!r}'.format(
+        context['to'], subject,
+        ))
+    mail.send(msg)

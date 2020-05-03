@@ -2,11 +2,31 @@
 Fixtures for the tests.
 """
 
+from unittest.mock import MagicMock
+
 import pytest
 
 from pr_watcher_notifier import create_app
 
 URL = '/pull-requests'
+
+
+class FakeFile:
+    """A simple fake file for attaching to dummy pull requests."""
+    def __init__(self, name):
+        self.filename = name
+
+
+def get_dummy_pr_with_list_of_files(count=None, names=None):
+    """
+    Create a PR with a dummy list of files.
+    """
+    if names is None:
+        names = ["file{}".format(n) for n in range(count)]
+    dummy_pr_object = MagicMock()
+    dummy_get_files = MagicMock(return_value=[FakeFile(n) for n in names])
+    dummy_pr_object.get_files = dummy_get_files
+    return dummy_pr_object
 
 
 @pytest.fixture
@@ -26,7 +46,9 @@ def client(app):
     """
     Fixture that returns a test client.
     """
-    return app.test_client()
+    with app.test_client() as client:
+        with app.app_context():
+            yield client
 
 
 @pytest.fixture

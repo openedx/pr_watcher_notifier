@@ -1,24 +1,13 @@
 """
 Unit tests for the application.
 """
-from unittest.mock import MagicMock
 
 from .views import get_repo_watch_config
-
+from .conftest import get_dummy_pr_with_list_of_files
 
 URL = '/pull-requests'
 
 REPO_CONFIG1 = {'patterns': ['documents/*', ], 'recipients': 'nobody@example.com'}
-
-
-def get_dummy_pr_with_list_of_files(count):
-    """
-    Return a dummy list of files in a PR.
-    """
-    dummy_pr_object = MagicMock()
-    dummy_list_of_files = MagicMock(return_value=[MagicMock() for _ in range(count)])
-    dummy_pr_object.get_files = dummy_list_of_files
-    return dummy_pr_object
 
 
 def test_get_method(client):

@@ -1,0 +1,14 @@
+# Configuration for pr-watcher-notifier
+"edx/*":
+  patterns:
+    - "decisions/*.rst"
+    - "decisions/*.md"
+    - "*/decisions/*.rst"
+    - "*/decisions/*.md"
+    - "oeps/*.rst"
+    - "oeps/*.md"
+  recipients:
+    # The Google Group for people who want email.
+    - "adr-notifications@googlegroups.com"
+  subject: "Change in {repo}"
+  body: test-template.txt
