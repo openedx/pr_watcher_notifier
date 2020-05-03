@@ -13,7 +13,7 @@ def make_email(data):
     Make the notification email.
     """
     context = make_notification_context(data)
-    current_app.logger.debug('Sending email with context: {}'.format(context))
+    current_app.logger.debug('Creating email with context: {}'.format(context))
     # Jinja assumes HTML output, but subjects are plain text, so disable
     # the html autoescaping.
     subject = render_template_string(
@@ -26,9 +26,6 @@ def make_email(data):
         recipients=context['to'],
     )
     msg.body = body
-    current_app.logger.info('Sending email to {!r} with subject {!r}'.format(
-        context['to'], subject,
-    ))
     return msg
 
 
@@ -68,4 +65,7 @@ def send_notifications(data):
     Send email notifications.
     """
     email = make_email(data)
+    current_app.logger.info('Sending email to {!r} with subject {!r}'.format(
+        email.recipients, email.subject
+    ))
     mail.send(email)
