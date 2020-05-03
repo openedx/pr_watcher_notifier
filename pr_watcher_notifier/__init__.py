@@ -17,7 +17,7 @@ def create_app(config_obj='settings'):
     Factory function for creating and configuring an application.
     """
     app = Flask(__name__)
-    from .views import APP
+    from .views import APP  # pylint:disable=import-outside-toplevel
     app.register_blueprint(APP, url_prefix='/')
     app.config.from_object(config_obj)
     app.logger.removeHandler(default_handler)
