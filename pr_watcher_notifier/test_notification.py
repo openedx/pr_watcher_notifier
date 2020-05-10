@@ -15,7 +15,7 @@ def test_email_rendering(app, client, mocker):
     """
     Test the rendering of email notifications.
     """
-    fake_names = ["oeps/some-oep.rst", "some-other-file"]
+    fake_names = ["oeps/some-oep.rst", "some-other-file", "oeps/another.rst"]
     dummy_pr_object = get_dummy_pr_with_list_of_files(names=fake_names)
     mocker.patch('pr_watcher_notifier.views.get_pr', return_value=dummy_pr_object)
 
@@ -38,6 +38,8 @@ def test_email_rendering(app, client, mocker):
         Changed files matching the filter:
 
           * oeps/some-oep.rst
+
+          * oeps/another.rst
 
 
         --
