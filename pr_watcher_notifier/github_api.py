@@ -47,7 +47,7 @@ def get_file_names(files):
 
 def get_comparison_file_names(repo, base, head):
     """
-    Return the file names of the file names modified in the given comparison.
+    Return the file names of the files modified in the given comparison.
     """
     files = []
     try:
