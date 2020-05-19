@@ -7,7 +7,10 @@ from .conftest import get_dummy_pr_with_list_of_files
 
 URL = '/pull-requests'
 
-REPO_CONFIG1 = {'patterns': ['documents/*', ], 'recipients': 'nobody@example.com'}
+REPO_CONFIG1 = {
+    'patterns': ['documents/*'],
+    'recipients': 'nobody@example.com',
+}
 
 
 def test_get_method(client):
@@ -115,7 +118,7 @@ def test_no_files_matching_condition(post, mocker):
         'pr_watcher_notifier.views.get_request_json',
         return_value={'number': 1, 'repository': {'full_name': 'a/b', 'private': False}, 'action': 'opened'}
     )
-    dummy_pr_object = get_dummy_pr_with_list_of_files(0)
+    dummy_pr_object = get_dummy_pr_with_list_of_files(["code/module.py"])
     mocker.patch('pr_watcher_notifier.views.get_pr', return_value=dummy_pr_object)
     response = post(json={'a': '1'})
     assert response.status_code == 200
@@ -133,8 +136,8 @@ def test_files_matching_condition(post, mocker):
         'pr_watcher_notifier.views.get_request_json',
         return_value={'number': 1, 'repository': {'full_name': 'a/b', 'private': False}, 'action': 'opened'}
     )
-    dummy_pr_object = get_dummy_pr_with_list_of_files(2)
-    mocker.patch('pr_watcher_notifier.views.fnmatch', return_value=True)
+    this_commit_file_names = ["documents/file1.rst", "elsewhere/file2.py"]
+    dummy_pr_object = get_dummy_pr_with_list_of_files(this_commit_file_names)
     mocker.patch('pr_watcher_notifier.views.get_pr', return_value=dummy_pr_object)
     mocked_send_notifications = mocker.patch('pr_watcher_notifier.views.send_notifications')
     response = post(json={'a': 1})
@@ -155,11 +158,11 @@ def test_pr_synchronized_but_already_notified(post, mocker):
             'action': 'synchronize', 'before': '123'
         }
     )
-    dummy_pr_object = get_dummy_pr_with_list_of_files(2)
-    mocker.patch('pr_watcher_notifier.views.fnmatch', return_value=True)
+    this_commit_file_names = ["documents/file1.rst", "elsewhere/file2.py"]
+    dummy_pr_object = get_dummy_pr_with_list_of_files(this_commit_file_names)
     mocker.patch('pr_watcher_notifier.views.get_pr', return_value=dummy_pr_object)
     mocker.patch('pr_watcher_notifier.views.get_target_branch', return_value='master')
-    mocker.patch('pr_watcher_notifier.views.get_comparison_file_names', return_value=['a', 'b', 'c'])
+    mocker.patch('pr_watcher_notifier.views.get_comparison_file_names', return_value=this_commit_file_names)
     mocked_send_notifications = mocker.patch('pr_watcher_notifier.views.send_notifications')
     response = post(json={'a': 1})
     assert response.status_code == 200
@@ -180,13 +183,14 @@ def test_pr_synchronized_but_not_already_notified(post, mocker):
             'before': '123'
         }
     )
-    dummy_pr_object = get_dummy_pr_with_list_of_files(2)
+    this_commit_file_names = ["documents/file1.rst", "elsewhere/file2.py"]
+    last_commit_file_names = ["a", "b"]
+    dummy_pr_object = get_dummy_pr_with_list_of_files(this_commit_file_names)
 
     mocker.patch('pr_watcher_notifier.views.get_repo_watch_config', return_value=(REPO_CONFIG1, False))
-    mocker.patch('pr_watcher_notifier.views.fnmatch', side_effect=[True, False, False])
     mocker.patch('pr_watcher_notifier.views.get_pr', return_value=dummy_pr_object)
     mocker.patch('pr_watcher_notifier.views.get_target_branch', return_value='master')
-    mocker.patch('pr_watcher_notifier.views.get_comparison_file_names', return_value=['a', 'b'])
+    mocker.patch('pr_watcher_notifier.views.get_comparison_file_names', return_value=last_commit_file_names)
     mocked_send_notifications = mocker.patch('pr_watcher_notifier.views.send_notifications')
     response = post(json={'a': 1})
     assert response.status_code == 201
@@ -281,14 +285,15 @@ def test_notifications_not_sent_for_private_repo_with_only_a_matching_org_wildca
             'before': '123'
         }
     )
-    dummy_pr_object = get_dummy_pr_with_list_of_files(2)
+    this_commit_file_names = ["documents/file1.rst", "elsewhere/file2.py"]
+    last_commit_file_names = ["a", "b"]
+    dummy_pr_object = get_dummy_pr_with_list_of_files(this_commit_file_names)
     wildcard_match = True
 
     mocker.patch('pr_watcher_notifier.views.get_repo_watch_config', return_value=(REPO_CONFIG1, wildcard_match))
-    mocker.patch('pr_watcher_notifier.views.fnmatch', side_effect=[True, False, False])
     mocker.patch('pr_watcher_notifier.views.get_pr', return_value=dummy_pr_object)
     mocker.patch('pr_watcher_notifier.views.get_target_branch', return_value='master')
-    mocker.patch('pr_watcher_notifier.views.get_comparison_file_names', return_value=['a', 'b'])
+    mocker.patch('pr_watcher_notifier.views.get_comparison_file_names', return_value=last_commit_file_names)
     mocked_send_notifications = mocker.patch('pr_watcher_notifier.views.send_notifications')
     response = post(json={'a': 1})
     assert response.status_code == 200
@@ -310,12 +315,13 @@ def test_notifications_sent_for_private_repo_with_an_exact_match(post, mocker):
         }
     )
     wildcard_match = False
-    dummy_pr_object = get_dummy_pr_with_list_of_files(2)
+    this_commit_file_names = ["documents/file1.rst", "elsewhere/file2.py"]
+    last_commit_file_names = ["a", "b"]
+    dummy_pr_object = get_dummy_pr_with_list_of_files(this_commit_file_names)
     mocker.patch('pr_watcher_notifier.views.get_repo_watch_config', return_value=(REPO_CONFIG1, wildcard_match))
-    mocker.patch('pr_watcher_notifier.views.fnmatch', side_effect=[True, False, False])
     mocker.patch('pr_watcher_notifier.views.get_pr', return_value=dummy_pr_object)
     mocker.patch('pr_watcher_notifier.views.get_target_branch', return_value='master')
-    mocker.patch('pr_watcher_notifier.views.get_comparison_file_names', return_value=['a', 'b'])
+    mocker.patch('pr_watcher_notifier.views.get_comparison_file_names', return_value=last_commit_file_names)
     mocked_send_notifications = mocker.patch('pr_watcher_notifier.views.send_notifications')
     response = post(json={'a': 1})
     assert response.status_code == 201
@@ -336,14 +342,19 @@ def test_notifications_sent_for_private_repo_with_matching_org_wildcard_pattern_
             'before': '123'
         }
     )
-    dummy_pr_object = get_dummy_pr_with_list_of_files(2)
+    this_commit_file_names = ["documents/file1.rst", "elsewhere/file2.py"]
+    last_commit_file_names = ["a", "b"]
+    dummy_pr_object = get_dummy_pr_with_list_of_files(this_commit_file_names)
     wildcard_match = True
-    repo_config = {'patterns': ['documents/*', ], 'recipients': 'nobody@example.com', 'notify_for_private_repos': True}
+    repo_config = {
+        'patterns': ['documents/*'],
+        'recipients': 'nobody@example.com',
+        'notify_for_private_repos': True,
+    }
     mocker.patch('pr_watcher_notifier.views.get_repo_watch_config', return_value=(repo_config, wildcard_match))
-    mocker.patch('pr_watcher_notifier.views.fnmatch', side_effect=[True, False, False])
     mocker.patch('pr_watcher_notifier.views.get_pr', return_value=dummy_pr_object)
     mocker.patch('pr_watcher_notifier.views.get_target_branch', return_value='master')
-    mocker.patch('pr_watcher_notifier.views.get_comparison_file_names', return_value=['a', 'b'])
+    mocker.patch('pr_watcher_notifier.views.get_comparison_file_names', return_value=last_commit_file_names)
     mocked_send_notifications = mocker.patch('pr_watcher_notifier.views.send_notifications')
     response = post(json={'a': 1})
     assert response.status_code == 201

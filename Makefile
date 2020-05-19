@@ -10,7 +10,7 @@ requirements: ## Install the Python development requirements\
 
 .PHONY: test
 test: ## Run the Python tests
-	pytest --cov=pr_watcher_notifier
+	pytest -rfe --cov=pr_watcher_notifier
 
 .PHONY: test.quality
 test.quality:

@@ -17,12 +17,10 @@ class FakeFile:
         self.filename = name
 
 
-def get_dummy_pr_with_list_of_files(count=None, names=None):
+def get_dummy_pr_with_list_of_files(names):
     """
     Create a PR with a dummy list of files.
     """
-    if names is None:
-        names = ["file{}".format(n) for n in range(count)]
     dummy_pr_object = MagicMock()
     dummy_get_files = MagicMock(return_value=[FakeFile(n) for n in names])
     dummy_pr_object.get_files = dummy_get_files
