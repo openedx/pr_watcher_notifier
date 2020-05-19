@@ -72,8 +72,6 @@ def should_send_notification(data):
                     if fnmatch(modified_file.filename, pattern):
                         matched = True
                         matching_modified_files.append(modified_file.filename)
-                if matched:
-                    break
         if matched:
             notify = True
 
