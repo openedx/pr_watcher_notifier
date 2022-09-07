@@ -29,7 +29,7 @@ def test_email_rendering(app, client, mocker):
     assert msg.body == textwrap.dedent("""\
         A pull request has files you might be interested in.
 
-        "Describe the 'maybe' key." (https://github.com/edx/open-edx-proposals/pull/145
+        "Describe the 'maybe' key." (https://github.com/openedx/open-edx-proposals/pull/145
         by nedbat)
         against the edx/open-edx-proposals
         repository (branch master)
