@@ -9,7 +9,7 @@ from flask import abort, request, current_app, Blueprint
 from .github_api import get_comparison_file_names, get_target_branch, get_pr, is_signature_valid
 from .notification import send_notifications
 
-APP = Blueprint('app.views', __name__, template_folder='templates')
+APP = Blueprint('views', __name__, template_folder='templates')
 
 
 def get_request_json(req):
