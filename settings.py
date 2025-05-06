@@ -1,6 +1,7 @@
 """
 Configuration for the application.
 """
+
 import os
 
 import yaml
@@ -12,7 +13,7 @@ def get_watch_config():
     the WATCH_CONFIG_FILE environment variable.
     """
     config_file = os.environ['WATCH_CONFIG_FILE']
-    with open(config_file) as yaml_file:
+    with open(config_file, encoding='utf-8') as yaml_file:
         return yaml.safe_load(yaml_file)
 
 

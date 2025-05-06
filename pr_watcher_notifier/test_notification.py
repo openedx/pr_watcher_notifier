@@ -11,7 +11,7 @@ from .views import combine_data
 
 TEST_DATA = Path(__file__).parent.parent / "test_data"
 
-def test_email_rendering(app, client, mocker):
+def test_email_rendering(app, client, mocker): # pylint: disable=unused-argument
     """
     Test the rendering of email notifications.
     """
@@ -19,9 +19,9 @@ def test_email_rendering(app, client, mocker):
     dummy_pr_object = get_dummy_pr_with_list_of_files(names=fake_names)
     mocker.patch('pr_watcher_notifier.views.get_pr', return_value=dummy_pr_object)
 
-    with open(TEST_DATA / "pr_145_merged.json") as fdata:
+    with open(TEST_DATA / "pr_145_merged.json", encoding="utf-8") as fdata:
         data = json.load(fdata)
-    with open(TEST_DATA / "edx_config.yml") as fconfig:
+    with open(TEST_DATA / "edx_config.yml", encoding="utf-8") as fconfig:
         config = yaml.safe_load(fconfig)
     combine_data(data, config)
     msg = make_email(data)

@@ -218,7 +218,7 @@ def test_get_repo_watch_config_when_excluding():
     """
     Test the get_repo_watch_config function when excluding a pattern
     """
-    repo_config, wildcard_match = get_repo_watch_config(
+    repo_config, _ = get_repo_watch_config(
         {
             'a/*': {
                 'patterns': ['documents/*'],

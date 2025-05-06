@@ -16,7 +16,7 @@ def is_signature_valid(request_obj):
     if signature is not None:
         secret = current_app.config['GITHUB_WEBHOOK_SECRET'].encode('utf-8')
         mac = hmac.new(secret, msg=request_obj.data, digestmod=hashlib.sha1)
-        return hmac.compare_digest('sha1={}'.format(mac.hexdigest()), signature)
+        return hmac.compare_digest(f'sha1={mac.hexdigest()}', signature)
     return False
 
 
@@ -34,7 +34,7 @@ def get_pr(repo, pr_number):
     try:
         return get_client().get_repo(repo).get_pull(pr_number)
     except Exception:
-        current_app.logger.error('Failed to retrieve the details of {}: #{}'.format(repo, pr_number))
+        current_app.logger.error(f'Failed to retrieve the details of {repo}: #{pr_number}')
         raise
 
 
