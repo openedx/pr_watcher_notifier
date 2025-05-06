@@ -8,7 +8,7 @@ when there are changes to files matched by the configured patterns for each repo
 Pre-requisites
 ==============
 
-Python 3.6 or newer
+Python 3.11 or newer
 
 
 GitHub Webhook setup
@@ -114,6 +114,12 @@ To use this as a GitHub webhook, you configure either a per-repo or per-organiza
 
 Changelog
 =========
+
+2025-05-06
+----------
+
+Dropped support for Python 3.8 and added support for Python 3.12.\
+Resolved pylint warnings in `make test.quality`.
 
 2020-05-03
 ----------
