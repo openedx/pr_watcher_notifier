@@ -19,7 +19,7 @@ organization/*:  # Wildcards like this, ending with /* can be used watch all rep
   body: /path/to/body/template/file/under/the/pr_watcher_notifier/templates/dir
   # Optional: file patterns to exclude, even though they match the top pattern.
   exclude:
-    - *SCRATCH*
+    - "*SCRATCH*"
 
 organization/*:
   patterns:
@@ -34,7 +34,7 @@ organization/*:
 
 <user or organization>/private-repository: # Notifications are always sent for explicitly configured repos, private or not.
   patterns:
-    - *.rst
-  recipient:
+    - "*.rst"
+  recipients:
     - somebody@example.com
-  subject: "PR Watcher notifier: watched change in {{repo}}
+  subject: "PR Watcher notifier: watched change in {{repo}}"

@@ -62,13 +62,13 @@ def should_send_notification(data):
         wildcard_match = data['wildcard_match']
         if is_private and wildcard_match and not config.get('notify_for_private_repos', False):
             current_app.logger.info(
-                '{} is a private repo for which notifications have not been explicitly enabled'.format(repo)
+                f'{repo} is a private repo for which notifications have not been explicitly enabled'
             )
             return False, []
         if config:
             for modified_file in pr.get_files():
                 for pattern in config['patterns']:
-                    current_app.logger.debug("fnmatch({!r}, {!r})".format(modified_file.filename, pattern))
+                    current_app.logger.debug(f"fnmatch({modified_file.filename!r}, {pattern!r})")
                     if fnmatch(modified_file.filename, pattern):
                         matched = True
                         matching_modified_files.append(modified_file.filename)
@@ -117,11 +117,11 @@ def handler():
         repo = data['repository']['full_name']
         pr_number = data['number']
         if data['notify']:
-            current_app.logger.info('Match: {} #{}'.format(repo, pr_number))
+            current_app.logger.info(f'Match: {repo} #{pr_number}')
             send_notifications(data)
             status_code = 201
         else:
-            current_app.logger.info('Ignored: {} #{}'.format(repo, pr_number))
+            current_app.logger.info(f'Ignored: {repo} #{pr_number}')
     else:
         current_app.logger.info('Ignored: Not a pull request')
 
