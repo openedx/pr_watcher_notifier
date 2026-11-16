@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm>8.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pr_watcher_notifier"
+dynamic = ["version"]
+description = "A Flask web application that sends notifications when watched files change in GitHub pull requests."
+readme = "README.md"
+license = "AGPL-3.0-only"
+license-files = ["LICENSE"]
+authors = [{name = "Open edX Project", email = "oscm@openedx.org"}]
+requires-python = ">=3.11"
+classifiers = [
+    "Framework :: Flask",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "Flask>=3.1.0",
+    "Flask-Mail>=0.10.0",
+    "PyGithub>=2.6.1",
+    "PyYAML>=6.0.2",
+    "gunicorn>=23.0.0",
+    "Werkzeug>=3.1.3",
+]
+
+[tool.setuptools_scm]
+version_scheme = "only-version"
+local_scheme = "no-local-version"
+fallback_version = "0.0.0"
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.packages.find]
+include = ["pr_watcher_notifier*"]
+exclude = ["*tests*"]
+
+[tool.setuptools.package-data]
+"pr_watcher_notifier" = ["templates/**"]
+
+[tool.coverage.run]
+branch = true
+source = ["pr_watcher_notifier"]
+omit = ["*/tests/*", "*/__pycache__/*"]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = ["pragma: no cover", "def __repr__", "raise AssertionError",
+    "raise NotImplementedError", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+
+[tool.pylint.format]
+max-line-length = 120
