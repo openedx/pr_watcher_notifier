@@ -10,7 +10,7 @@ upgrade: ## Update uv.lock with the latest versions of the dependencies
 
 .PHONY: requirements
 requirements: ## Install the Python development requirements
-	uv sync --group dev
+	uv sync --locked --group dev
 
 .PHONY: test
 test: ## Run the Python tests
