@@ -9,3 +9,6 @@ pylint:
   disable:
     # This is needed due to the way the app factory pattern is used. However, this can mask other occurrences.
     - cyclic-import
+    # Autodetect finds Django in the edx-lint constraints in pyproject.toml,
+    # but this is a Flask app and Django isn't installed.
+    - django-not-available

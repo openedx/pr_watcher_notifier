@@ -27,12 +27,12 @@ Development Setup
 =================
 
 * Clone this repository and navigate into the cloned directory.
-* Create a virtualenv environment and install the requirements.
+* Install [uv](https://docs.astral.sh/uv/), then install the requirements. `make requirements` creates the
+  `.venv` virtualenv; activate it before running the other `make` targets.
 
 ```bash
-$ python3 -m venv venv
-$ source venv/bin/activate
 $ make requirements
+$ source .venv/bin/activate
 ```
 
 * Verify that the unit tests run without errors and pass.
