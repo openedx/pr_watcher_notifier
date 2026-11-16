@@ -9,7 +9,7 @@ from .notification import make_email
 from .views import combine_data
 
 
-TEST_DATA = Path(__file__).parent.parent / "test_data"
+TEST_DATA = Path(__file__).parent.parent.parent / "test_data"
 
 def test_email_rendering(app, client, mocker): # pylint: disable=unused-argument
     """

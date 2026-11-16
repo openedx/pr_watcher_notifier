@@ -35,15 +35,20 @@ fallback_version = "0.0.0"
 include-package-data = false
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["pr_watcher_notifier*"]
 exclude = ["*tests*"]
 
 [tool.setuptools.package-data]
 "pr_watcher_notifier" = ["templates/**"]
 
+[tool.pytest.ini_options]
+# settings.py and test_settings.py live at the repo root, outside src/.
+pythonpath = ["."]
+
 [tool.coverage.run]
 branch = true
-source = ["pr_watcher_notifier"]
+source_pkgs = ["pr_watcher_notifier"]
 omit = ["*/tests/*", "*/__pycache__/*"]
 
 [tool.coverage.report]
