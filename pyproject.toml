@@ -46,15 +46,8 @@ exclude = ["*tests*"]
 # settings.py and test_settings.py live at the repo root, outside src/.
 pythonpath = ["."]
 
-[tool.coverage.run]
-branch = true
-source_pkgs = ["pr_watcher_notifier"]
-omit = ["*/tests/*", "*/__pycache__/*"]
-
 [tool.coverage.report]
 show_missing = true
-exclude_lines = ["pragma: no cover", "def __repr__", "raise AssertionError",
-    "raise NotImplementedError", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
 [tool.pylint.format]
 max-line-length = 120
